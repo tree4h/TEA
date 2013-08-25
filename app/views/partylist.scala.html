@@ -1,0 +1,32 @@
+@(parties: List[jp.co.isken.tax.domain.party.Party])
+@title = {取引先一覧}
+
+@main(title, "1") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>取引先一覧</h2>
+
+	<table class="table table-hover table-bordered table-condensed">
+	<thead>
+		<tr><th>ID</th><th>名称</th><th>種別</th><th>注文数</th></tr>
+	</thead>
+	</tbody>
+		<form action="/party/entry" method="GET" class="form-horizontal">
+			<tr>
+			<th><button class="btn btn-mini btn-primary" type="submit">＋</button></th>
+			<th></th><th></th><th></th>
+			</tr>
+		</form>
+		@for(party <- parties) {
+		  <tr>
+		  <td><a href="/party/@party.getId()">@party.getId()</a></td>
+		  <td>@party.getName()</td><td>@party.getType()</td><td>TODO</td>
+		  </tr>
+		}
+	</tbody>
+	</table>
+
+	</div>
+	</div>
+}

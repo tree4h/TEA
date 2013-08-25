@@ -1,0 +1,47 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.PartyController.showPartyList()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+#PartyController
+GET	/party		controllers.PartyController.showPartyList()
+GET	/party/entry			controllers.PartyController.initParty()
+POST	/party/entry			controllers.PartyController.entryParty()
+GET	/party/:id			controllers.PartyController.showParty(id :Long)
+POST	/party/delete			controllers.PartyController.deleteParty()
+
+#ContractController
+GET		/contract		controllers.ContractController.showContractList()
+GET		/contract/entry		controllers.ContractController.initContract()
+POST	/contract/entry			controllers.ContractController.entryContract()
+GET		/contract/:id			controllers.ContractController.showContract(id :Long)
+POST	/contract/delete			controllers.ContractController.deleteContract()
+
+#ItemController
+GET		/item		controllers.ItemController.showItemList()
+GET		/item/entry		controllers.ItemController.initItem()
+POST	/item/entry			controllers.ItemController.entryItem()
+GET	/item/:id			controllers.ItemController.showItem(id :Long)
+POST	/item/delete			controllers.ItemController.deleteItem()
+
+#OrderController
+GET		/order		controllers.OrderController.showOrderList()
+GET		/order/entry		controllers.OrderController.initOrder()
+GET	/order/confirm/:id			controllers.OrderController.confirmOrder(id :Long)
+POST	/order/entry			controllers.OrderController.entryOrder()
+GET	/order/:id			controllers.OrderController.showOrder(id :Long)
+GET	/order/:id/TEA			controllers.OrderController.showOrderTEA(id :Long)
+POST	/order/delete			controllers.OrderController.deleteOrder()
+POST	/order/revise			controllers.OrderController.reviseOrder()
+
+#TaxController
+GET		/tax		controllers.TaxController.showTaxList()
+GET		/tax/entry		controllers.TaxController.initTax()
+POST	/tax/entry			controllers.TaxController.entryTax()
+POST	/tax/allentry			controllers.TaxController.allentryTax()
+POST	/tax/alldelete			controllers.TaxController.alldeleteTax()

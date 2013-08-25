@@ -1,0 +1,42 @@
+@(types: List[String])
+@import jp.co.isken.tax.domain.party.PartyType
+
+@title = {取引先登録}
+
+@main(title, "1") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>取引先登録</h2>
+
+	<form action="/party/entry" method="POST" class="form-horizontal">
+		<div class="control-group">
+		<label class="control-label">取引先種別</label>
+		<div class="controls">
+			<select class="span2" name="party_type">
+			@for(pt <- types) {
+				<option value="@pt">@pt</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引先名称</label>
+		<div class="controls">
+			<input type="text" class="span2" placeholder="Name" name="party_name" required>
+		</div>
+		</div>
+		
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	        <a href="/party" class="btn">Cancel</a>
+	    </div>
+		</div>
+		
+    </form>
+	
+	</div>
+	</div>
+}

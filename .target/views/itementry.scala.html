@@ -1,0 +1,49 @@
+@(types: List[String])(units: List[String])
+@title = {商品登録}
+
+@main(title, "2") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>商品登録</h2>
+	<form action="/item/entry" method="POST" class="form-horizontal" id="valcheck" >
+		<div class="control-group">
+		<label class="control-label">商品名</label>
+		<div class="controls">
+			<input type="text" class="span2" placeholder="Name" name="item_name" required>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">税品目</label>
+		<div class="controls">
+			<select class="span2" name="item">
+	   		@for(item <- types) {
+				<option value="@item">@item</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">単価</label>
+		<div class="controls">
+			<input type="number" class="span2" placeholder="Price" name="price" required> 円/
+			<select class="span1" name="unit">
+	   		@for(unit <- units) {
+				<option value="@unit">@unit</option>
+			}
+			</select>
+		</div>
+		</div>
+		
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	        <a href="/item" class="btn">Cancel</a>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

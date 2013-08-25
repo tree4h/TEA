@@ -1,0 +1,47 @@
+@(message: String)
+@title = {消費税登録}
+
+@main(title, "5") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	@if(message != ""){
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			@message
+		</div>
+	}
+	<h2>消費税登録</h2>
+	<form action="/tax/entry" method="POST" class="form-horizontal" id="valcheck">
+		<div class="control-group">
+		<label class="control-label">税品目</label>
+		<div class="controls">
+			<input type="text" class="span2" placeholder="TBD" name="tax_type" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">消費税率</label>
+		<div class="controls">
+			<input type="number" class="span2" placeholder="0.00" name="tax_rate" required>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">期間</label>
+		<div class="controls">
+	  		<input id="dp1" type="date" class="span2" placeholder="発効日" name="start" required>
+			<input id="dp2" type="date" class="span2" placeholder="失効日" name="end" required>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	        <a href="/tax" class="btn">Cancel</a>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

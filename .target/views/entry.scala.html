@@ -1,0 +1,21 @@
+@(partyForm: Form[jp.co.isken.tax.domain.party.Party])
+@import helper._
+@implicitField = @{ FieldConstructor(bootstrapField.f) }
+@title = {取引先登録}
+
+@main(title, nav = "signup") {
+<div class="container">
+    <h1>取引先登録</h1></br>
+    @helper.form(action = routes.PartyController.submitEntry) {
+    <fieldset>
+        @inputText(partyForm("name"),'_label -> "取引先名称",'_error -> partyForm.globalError)
+    </fieldset>
+ 
+    <div class="actions">
+        <input type="submit" class="btn btn-primary" value="entry">
+        <a href="@routes.PartyController.initEntry" class="btn">cancel</a>
+    </div>
+ 
+    }
+</div>
+}

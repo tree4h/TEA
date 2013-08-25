@@ -1,0 +1,83 @@
+@(parties: List[jp.co.isken.tax.domain.party.Party])(types: List[String])(rounds: List[String])(units: List[String])
+@title = {契約登録}
+
+@main(title, "3") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>契約登録</h2>
+	<form action="/contract/entry" method="POST" class="form-horizontal" id="valcheck">
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<select class="span2" name="party_id">
+	   		@for(party <- parties) {
+				<option value=@party.getId()>@party.getName()</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約種別</label>
+		<div class="controls">
+			<select class="span2" name="contract_type">
+	   		@for(ctype <- types) {
+				<option value="@ctype">@ctype</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約期間</label>
+		<div class="controls">
+	  		<input id="dp1" type="date" class="span2" placeholder="発効日" name="start" required>
+			<input id="dp2" type="date" class="span2" placeholder="失効日" name="end" required>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">代金条項</label>
+		<div class="controls">
+			<select class="span2" name="payment_round">
+	   		@for(round <- rounds) {
+				<option value="@round">@round</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">消費税条項</label>
+		<div class="controls">
+			<select class="span2" name="tax_round">
+	   		@for(round <- rounds) {
+				<option value="@round">@round</option>
+			}
+			</select>
+			<select class="span2" name="tax_unit">
+	   		@for(unit <- units) {
+				<option value="@unit">@unit</option>
+			}
+			</select>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">締結日</label>
+		<div class="controls">
+	  		<input id="dp3" type="date" class="span2" placeholder="締結日" name="agreement" required>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	        <a href="/contract" class="btn">Cancel</a>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

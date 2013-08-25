@@ -1,0 +1,81 @@
+@(message: String)(parties: List[jp.co.isken.tax.domain.party.Party])
+@title = {契約登録}
+
+@top(title, "3") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>契約登録</h2>
+	<form action="/contract/entry" method="POST" class="form-horizontal">
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<select class="span2" name="party_id">
+	   		@for(party <- parties) {
+				<option value=@party.getId()>@party.getName()</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約種別</label>
+		<div class="controls">
+			<select class="span2" name="contract_type">
+				<option value="SALES">仕入</option>
+				<option value="PURCHASE">販売</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約期間</label>
+		<div class="controls">
+	  		<input id="dp1" type="text" class="span2" placeholder="発効日" name="start" required>
+			<input id="dp2" type="text" class="span2" placeholder="失効日" name="end" required>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">代金条項</label>
+		<div class="controls">
+			<select class="span2" name="payment_round">
+				<option value="ROUNDDOWN">切り捨て</option>
+				<option value="ROUNDUP">切り上げ</option>
+				<option value="ROUNDOFF">四捨五入</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">消費税条項</label>
+		<div class="controls">
+			<select class="span2" name="tax_round">
+				<option value="ROUNDDOWN">切り捨て</option>
+				<option value="ROUNDUP">切り上げ</option>
+				<option value="ROUNDOFF">四捨五入</option>
+			</select>
+			<select class="span2" name="tax_unit">
+				<option value="DETAIL">明細単位</option>
+				<option value="SUM">合計</option>
+				<option value="CHEAPER">安い方</option>
+			</select>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">締結日</label>
+		<div class="controls">
+	  		<input id="dp3" type="text" class="span2" placeholder="締結日" name="agreement" required>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

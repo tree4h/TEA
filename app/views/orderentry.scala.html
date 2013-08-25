@@ -1,0 +1,98 @@
+@(message: String)(parties: List[jp.co.isken.tax.domain.party.Party])(goods: List[jp.co.isken.tax.domain.item.Goods])(types: List[String])(taxtypes: List[String])(units: List[String])
+@title = {注文登録}
+
+@main(title, "4") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	@if(message != ""){
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			@message
+		</div>
+	}
+	<h2>注文登録</h2>
+	<form action="/order/entry" method="POST" class="form-horizontal" id="valcheck" >
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<select class="span2" name="party_id">
+	   		@for(party <- parties) {
+				<option value=@party.getId()>@party.getName()</option>
+			}
+			</select>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">取引日</label>
+		<div class="controls">
+	  		<input id="dp" type="date" class="span2" placeholder="取引日" name="charged" required>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引種別</label>
+		<div class="controls">
+			<select class="span2" name="deal_type">
+	   		@for(dealtype <- types) {
+				<option value="@dealtype">@dealtype</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引対象区分</label>
+		<div class="controls">
+			<select class="span2" name="deal_taxtype">
+	   		@for(taxtype <- taxtypes) {
+				<option value="@taxtype">@taxtype</option>
+			}
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引課税区分</label>
+		<div class="controls">
+			<input type="radio" checked value="1" name="tax_type"></input> 課税
+			<input type="radio" value="0" name="tax_type"></input> 非課税
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">消費税計算</label>
+		<div class="controls">
+			<input type="radio" checked value="外税" name="compute_type"></input> 外税
+			<input type="radio" value="内税" name="compute_type"></input> 内税
+			<input type="radio" value="非課税" name="compute_type"></input> 非課税
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">商品</label>
+   		@for(g <- goods) {
+		<div class="controls">
+				<input type="hidden" name="goods_g@g.getId()" value="@g.getId()">
+				<input type="text" class="span2" value="@g.getName()" name="item" required disabled>
+				<input type="number" class="span1" value="0" name="goods_a@g.getId()" required>
+				<select class="span1" name="goods_u@g.getId()">
+			   	@for(unit <- units) {
+					<option value="@unit">@unit</option>
+				}
+				</select>
+		</div>
+		}
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Entry</button>
+	        <a href="/order" class="btn">Cancel</a>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

@@ -1,0 +1,100 @@
+@(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
+@title = {注文}
+
+@main(title, "4") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>注文   @ov.id</h2>
+	<form action="/order/revise" method="POST" class="form-horizontal" id="valcheck" >
+		<input type="hidden" name="order_id" value="@ov.id">
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.client" name="party_id" required disabled>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">取引日</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.whenCharged" name="charged" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引種別</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.dealType" name="deal_type" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引対象区分</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.dealTaxType" name="deal_taxtype" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引課税区分</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.taxType" name="tax_type" required disabled>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">消費税計算</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.computeType" name="compute_type" required disabled>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">商品</label>
+   		@for(r <- receipts) {
+		<div class="controls">
+				<input type="text" class="span2" value="@r.name" name="" disabled>
+				<input type="text" class="span1" value="@r.amount" name="" disabled>
+				<input type="text" class="span1" value="@r.unit" name="" disabled>
+				<input type="text" class="span2" value="@r.price 円" name="" disabled>
+				<input type="checkbox" name="cancel_f@r.id"></input>
+				<input type="number" class="span1" placeholder="修正値" name="cancel_a@r.id" >
+		</div>
+		}
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">合計</label>
+		<div class="controls">
+				<input type="text" class="span2" value="@ov.price 円" name="item" disabled>
+		</div>
+		</div>
+		<div class="control-group">
+		<label class="control-label">内消費税</label>
+		<div class="controls">
+				<input type="text" class="span2" value="@ov.tax 円" name="item" disabled>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">修正</button>
+	        <a href="/order" class="btn">Back</a>
+	    </div>
+		</div>
+	</form>
+
+	<form action="/order/delete" method="POST" class="form-horizontal" id="valcheck" >
+		<input type="hidden" name="order_id" value="@ov.id">
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn" type="submit">削除</button>
+	        <a href="/order/@ov.id/TEA" class="btn  btn-success" target="_blank">TEA</a>
+	    </div>
+		</div>
+	</form>
+
+	</div>
+	</div>
+}

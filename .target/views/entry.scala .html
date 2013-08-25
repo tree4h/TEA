@@ -1,0 +1,22 @@
+@(partyForm: Form[Party])
+@import helper._
+@import views.BootstrapHelper._
+@title = {æˆøæ“o˜^}
+
+@main(title, nav = "signup") {
+<div class="container">
+    <h1>æˆøæ“o˜^</h1></br>
+    @helper.form(action = routes.PartyController.entry) {
+    <fieldset>
+        <legend>•K—v–€‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢</legend>
+        @inputText(partyForm("name"),'_label -> "name",'_help -> "input valid name.",'_error -> partyForm.globalError)
+    </fieldset>
+ 
+    <div class="actions">
+        <input type="submit" class="btn primary" value="entry">
+        <a href="@routes.PartyController.entry" class="btn">cancel</a>
+    </div>
+ 
+    }
+</div>
+}

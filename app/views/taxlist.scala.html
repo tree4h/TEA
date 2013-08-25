@@ -1,0 +1,41 @@
+@(trs: List[jp.co.isken.taxlib.domain.TaxRate])
+@import views.ViewUtils.printDate;
+@title = {消費税一覧}
+
+@main(title, "5") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>消費税一覧</h2>
+
+	<table class="table table-hover table-bordered table-condensed">
+	<thead>
+		<tr><th>ID</th><th>税率</th><th>発効日</th><th>無効日</th></tr>
+	</thead>
+	</tbody>
+		<tr>
+		<form action="/tax/entry" method="GET" class="form-horizontal">
+			<th><button class="btn btn-mini btn-primary" type="submit">＋</button></th>
+		</form>
+		<form action="/tax/allentry" method="POST" class="form-horizontal">
+			<th><button class="btn btn-mini" type="submit">一括登録</button></th>
+		</form>
+		<form action="/tax/alldelete" method="POST" class="form-horizontal">
+			<th><button class="btn btn-mini" type="submit">一括削除</button></th>
+		</form>
+		<th></th>
+		</tr>
+		@for(tr <- trs) {
+		  <tr>
+		  <td>@tr.getId()</td>
+		  <td>@tr.getRate()</td>
+		  <td>@printDate(tr.getEffectiveDate())</td>
+		  <td>@printDate(tr.getInEffectiveDate())</td>
+		  </tr>
+		}
+	</tbody>
+	</table>
+
+	</div>
+	</div>
+}

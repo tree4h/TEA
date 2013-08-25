@@ -1,0 +1,32 @@
+@(goods: List[jp.co.isken.tax.domain.item.Goods])
+@title = {商品一覧}
+
+@main(title, "2") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>商品一覧</h2>
+
+	<table class="table table-hover table-bordered table-condensed">
+	<thead>
+		<tr><th>ID</th><th>商品名</th><th>税品目</th><th>単価(円)</th><th>単位</th></tr>
+	</thead>
+	</tbody>
+		<form action="/item/entry" method="GET" class="form-horizontal">
+			<tr>
+			<th><button class="btn btn-mini btn-primary" type="submit">＋</button></th>
+			<th></th><th></th><th></th><th></th>
+			</tr>
+		</form>
+		@for(g <- goods) {
+		  <tr>
+		  <td><a href="/item/@g.getId()">@g.getId()</a></td>
+		  <td>@g.getName()</td><td>@g.getItem()</td><td>@g.getUnitPrice().getPrice()</td><td>@g.getUnitPrice().getUnit()</td>
+		  </tr>
+		}
+	</tbody>
+	</table>
+
+	</div>
+	</div>
+}

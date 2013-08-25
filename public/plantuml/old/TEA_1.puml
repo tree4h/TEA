@@ -1,0 +1,62 @@
+@startuml
+title 商流取引1
+object "Party1" as P1
+P1:name = 切り捨て-合計
+object "Contract1" as C1
+C1:代金丸め = ROUNDDOWN
+C1:消費税丸め = ROUNDDOWN
+C1:課税単位 = SUM
+object "CT1" as CT1
+CT1:取引日 = 2013-07-30
+object "CE1" as CE1
+CE1:量 = 5.5KG
+object "CE2" as CE2
+CE2:量 = 8.3KG
+object "CA1" as CA1
+CA1:client = 切り捨て-合計
+CA1:goods = 鯛のアラ
+object "CA2" as CA2
+CA2:client = 切り捨て-合計
+CA2:goods = ヒラマサのアラ
+object "Goods1" as G1
+G1:name = 鯛のアラ
+G1:price = 276.0円/KG
+object "Goods2" as G2
+G2:name = ヒラマサのアラ
+G2:price = 126.0円/KG
+object "課税品目" as I866498857
+object "PT3" as PT3
+object "PT1" as PT1
+object "PT2" as PT2
+object "PE3" as PE3
+PE3:price = 128.0円
+object "PE1" as PE1
+PE1:price = 1518.0円
+object "PE2" as PE2
+PE2:price = 1045.0円
+object "PA2" as PA2
+PA2:client = 切り捨て-合計
+PA2:科目 = 消費税
+object "PA1" as PA1
+PA1:client = 切り捨て-合計
+PA1:科目 = 商品代金
+object "消費税" as PAT381942626
+object "商品代金" as PAT481094299
+C1 -u-> P1
+CT1 -u-> C1
+CE1 -l-> CT1
+CE1 -r-> CA1
+CE2 -l-> CT1
+CE2 -r-> CA2
+G1 -u-> I866498857
+G2 -u-> I866498857
+PT3 -u-> CT1
+PT1 -u-> CE1
+PT2 -u-> CE2
+PE3 -l-> PT3
+PE3 -r-> PA2
+PE1 -l-> PT1
+PE1 -r-> PA1
+PE2 -l-> PT2
+PE2 -r-> PA1
+@enduml

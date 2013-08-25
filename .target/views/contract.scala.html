@@ -1,0 +1,74 @@
+@(contract: jp.co.isken.tax.domain.contract.Contract)
+@title = {契約}
+
+@main(title, "3") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>契約</h2>
+	<form action="/contract/delete" method="POST" class="form-horizontal">
+		<input type="hidden" name="contract_id" value="@contract.getId()">
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<select class="span2" name="party_id" disabled>
+	   			<option value=@contract.getFirstParty().getId()>@contract.getFirstParty().getName()</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約種別</label>
+		<div class="controls">
+			<select class="span2" name="contract_type" disabled>
+				<option value="@contract.getType()">@contract.getType()</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">契約期間</label>
+		<div class="controls">
+	  		<input id="dp1" type="text" class="span2" value="@views.ViewUtils.printDate(contract.getEffectiveDate())" name="start" required disabled>
+			<input id="dp2" type="text" class="span2" value="@views.ViewUtils.printDate(contract.getInEffectiveDate())" name="end" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">代金条項</label>
+		<div class="controls">
+			<select class="span2" name="payment_round" disabled>
+				<option value="@contract.getPayCondition().getRoundingRule()">@contract.getPayCondition().getRoundingRule()</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">消費税条項</label>
+		<div class="controls">
+			<select class="span2" name="tax_round" disabled>
+				<option value="@contract.getTaxCondition().getRoundingRule()">@contract.getTaxCondition().getRoundingRule()</option>
+			</select>
+			<select class="span2" name="tax_unit" disabled>
+				<option value="@contract.getTaxCondition().getTaxUnitRule()">@contract.getTaxCondition().getTaxUnitRule()</option>
+			</select>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">締結日</label>
+		<div class="controls">
+	  		<input id="dp3" type="text" class="span2" value="@views.ViewUtils.printDate(contract.getWhenAgreement())" name="agreement" required disabled>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Delete</button>
+	        <a href="/contract" class="btn">Back</a>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

@@ -1,0 +1,80 @@
+@(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
+@title = {注文確認}
+
+@main(title, "4") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>注文確認</h2>
+	<form action="/order/delete" method="POST" class="form-horizontal" id="valcheck" >
+		<input type="hidden" name="order_id" value="@ov.id">
+		<div class="control-group">
+		<label class="control-label">取引先</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.client" name="party_id" required disabled>
+		</div>
+		</div>
+		
+		<div class="control-group">
+		<label class="control-label">取引日</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.whenCharged" name="charged" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引種別</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.dealType" name="deal_type" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引対象区分</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.dealTaxType" name="deal_taxtype" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引課税区分</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.taxType" name="tax_type" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">商品</label>
+   		@for(r <- receipts) {
+		<div class="controls">
+				<input type="text" class="span2" value="@r.name" name="item" disabled>
+				<input type="text" class="span1" value="@r.amount" name="goods_a@r.id" disabled>
+				<input type="text" class="span1" value="@r.unit" name="goods_u@r.id" disabled>
+				<input type="text" class="span2" value="@r.price 円" name="item" style="color:rgb(255,0,0)" disabled>
+		</div>
+		}
+		</div>
+
+		<div class="control-group">
+		<label class="control-label" style="color:rgb(255,0,0)">合計</label>
+		<div class="controls">
+				<input type="text" class="span2" value="@ov.price 円" name="item" style="color:rgb(255,0,0)" disabled>
+		</div>
+		</div>
+		<div class="control-group">
+		<label class="control-label" style="color:rgb(255,0,0)">内消費税</label>
+		<div class="controls">
+				<input type="text" class="span2" value="@ov.tax 円" name="item" style="color:rgb(255,0,0)" disabled>
+		</div>
+		</div>
+
+		<div class="controls">
+	    <div class="actions">
+	        <a href="/order" class="btn btn-primary">OK</a>
+	    	<button class="btn" type="submit">Cancel</button>
+	    </div>
+		</div>
+	</form>
+	</div>
+	</div>
+}

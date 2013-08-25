@@ -1,0 +1,36 @@
+@(contracts: List[jp.co.isken.tax.domain.contract.Contract])
+@title = {契約一覧}
+
+@main(title, "3") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>契約一覧</h2>
+
+	<table class="table table-hover table-bordered table-condensed">
+	<thead>
+		<tr><th>ID</th><th>取引先名称</th><th>契約種別</th><th>代金丸め</th><th>消費税丸め</th><th>消費税単位</th></tr>
+	</thead>
+	</tbody>
+		<form action="/contract/entry" method="GET" class="form-horizontal">
+			<tr>
+			<th><button class="btn btn-mini btn-primary" type="submit">＋</button></th>
+			<th></th><th></th><th></th><th></th><th></th>
+			</tr>
+		</form>
+		@for(contract <- contracts) {
+		  <tr>
+		  <td><a href="/contract/@contract.getId()">@contract.getId()</a></td>
+		  <td>@contract.getFirstParty().getName()</td>
+		  <td>@contract.getType()</td>
+		  <td>@contract.getPayCondition().getRoundingRule()</td>
+		  <td>@contract.getTaxCondition().getRoundingRule()</td>
+		  <td>@contract.getTaxCondition().getTaxUnitRule()</td>
+		  </tr>
+		}
+	</tbody>
+	</table>
+
+	</div>
+	</div>
+}

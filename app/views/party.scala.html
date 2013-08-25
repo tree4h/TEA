@@ -1,0 +1,39 @@
+@(party: jp.co.isken.tax.domain.party.Party)
+@title = {取引先}
+
+@main(title, "1") {
+	<div class="container">
+	<div class="span9">
+	</br>
+	<h2>取引先  @party.getId()</h2>
+
+	<form action="/party/delete" method="POST" class="form-horizontal">
+		<input type="hidden" name="party_id" value="@party.getId()">
+		<div class="control-group">
+		<label class="control-label">取引先種別</label>
+		<div class="controls">
+			<select class="span2" name="party_type" disabled>
+				<option value="@party.getType()">@party.getType()</option>
+			</select>
+		</div>
+		</div>
+
+		<div class="control-group">
+		<label class="control-label">取引先名称</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@party.getName()" name="party_name" required disabled>
+		</div>
+		</div>
+		
+		<div class="controls">
+	    <div class="actions">
+	    	<button class="btn btn-primary" type="submit">Delete</button>
+	        <a href="/party" class="btn">Back</a>
+	    </div>
+		</div>
+		
+    </form>
+	
+	</div>
+	</div>
+}
