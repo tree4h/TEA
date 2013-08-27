@@ -15,32 +15,32 @@ public class DateRange extends Model {
 	@Id
 	private int id;
 	@NotNull
-	private Date begin;
+	private Date beginDate;
 	@NotNull
-	private Date end;
+	private Date endDate;
 
 	public DateRange(Date start, Date end) {
-		this.begin = start;
-		this.end = end;
+		this.beginDate = start;
+		this.endDate = end;
 	}
 	
 	public boolean isEffective(Date d) {
 		Long target = d.getTime();
-		if(target < begin.getTime()) {
+		if(target < beginDate.getTime()) {
 			return false;
 		}
-		if(target >= end.getTime()) {
+		if(target >= endDate.getTime()) {
 			return false;
 		}
 		return true;
 	}
 
 	public Date getBegin() {
-		return begin;
+		return beginDate;
 	}
 	
 	public Date getEnd() {
-		return end;
+		return endDate;
 	}
 
 }

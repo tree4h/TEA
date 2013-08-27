@@ -12,8 +12,7 @@ object ApplicationBuild extends Build {
     javaCore,
     javaJdbc,
     javaEbean,
-	"mysql" % "mysql-connector-java" % "5.1.26",
-	"postgresql" % "postgresql" % "9.1-901-1.jdbc4"
+	"mysql" % "mysql-connector-java" % "5.1.26"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
