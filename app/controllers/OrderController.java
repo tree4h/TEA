@@ -200,7 +200,7 @@ public class OrderController extends Controller {
 				   //注文単位の取得
 				   Unit unit = Unit.valueOf(input.get(U_KEY+id));
 				   //注文の作成
-				   GoodsOrder go = new GoodsOrder(Long.parseLong(id), amount, unit);
+				   //GoodsOrder go = new GoodsOrder(Long.parseLong(id), amount, unit);
 				   result.add(go);
 			   }
 		   }
