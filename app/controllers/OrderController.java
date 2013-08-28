@@ -29,6 +29,7 @@ import views.html.orderconfirm;
 import views.html.order;
 
 import jp.co.isken.tax.rdb.RDBOperator;
+import jp.co.isken.tax.view.GoodsOrder;
 import jp.co.isken.tax.view.OrderLinks;
 import jp.co.isken.tax.view.OrderView;
 import jp.co.isken.tax.view.PlantUML;
@@ -37,7 +38,12 @@ import jp.co.isken.tax.view.Receipt;
 public class OrderController extends Controller {
 	//画面表示用　処理結果メッセージ
 	private static ViewMessage message = ViewMessage.NO_MESSAGE;
-    /*
+	//Formデータinputのキー
+	private static final String G_KEY = "goods_g";
+	private static final String A_KEY = "goods_a";
+	private static final String U_KEY = "goods_u";
+
+	/*
      * 注文一覧画面表示
      */
     public static Result showOrderList() {
@@ -140,18 +146,19 @@ public class OrderController extends Controller {
 			String tax_type = input.data().get("tax_type");
 			String compute_type = input.data().get("compute_type");
 			//商流取引input作成
-			Party client = RDBOperator.$findParty(Long.parseLong(party_id));
+			boolean taxType = true;
+			if(tax_type == "0") { taxType = false; }
 			DealType dealType = DealType.valueOf(deal_type);
 			TaxedDealType taxedDealType = TaxedDealType.valueOf(deal_taxtype);
 			ComputeType computeType = ComputeType.valueOf(compute_type);
-			boolean taxType = true;
-			if(tax_type == "0") {
-				taxType = false;
-			}
 			//商流ファサードの作成,商流取引（CT）の作成
-			Order order = new Order(client, dealType, taxType, taxedDealType, date(charged), computeType);
+			Order order = new Order(Long.parseLong(party_id), dealType, taxType, taxedDealType,
+					date(charged), computeType);
+			//商品注文の取得
+			List<GoodsOrder> gos = makeGoodsOrder(input.data());
 			//商流勘定（CE）の作成
-			makeGoodsOrder(input.data(), order);
+			order.createCE(gos);
+			
 			//金流inputの取得
 			//金流ファサード作成
 			Payment payment = new Payment(order);
@@ -176,34 +183,32 @@ public class OrderController extends Controller {
 	}
    
    //TODO 商品input取得　この処理は無理やり！！JSON?が利用できる？
-   private static void makeGoodsOrder(Map<String,String> input, Order order) {
+   private static List<GoodsOrder> makeGoodsOrder(Map<String, String> input) {
 	   System.out.println("makeGoodsOrder");
-	   String G_KEY = "goods_g";
-	   String A_KEY = "goods_a";
-	   String U_KEY = "goods_u";
+	   List<GoodsOrder> result = new ArrayList<GoodsOrder>();
 	   boolean order_flag = false;
 	   for (String key : input.keySet()) {
 		   System.out.println("key=" + key + ", value=" + input.get(key));
 		   if(key.startsWith(G_KEY)) {
 			   //商品番号の取得
-			   String id_str = key.replace(G_KEY, "");
+			   String id = key.replace(G_KEY, "");
 			   //注文量の取得
-			   double amount = Double.parseDouble(input.get(A_KEY+id_str));
+			   double amount = Double.parseDouble(input.get(A_KEY+id));
 			   if(!(amount == 0.0)) {
 				   //注文の記録
 				   order_flag = true;
-				   //商品の取得
-				   Goods g = RDBOperator.$findGoods(Long.parseLong(id_str));
 				   //注文単位の取得
-				   Unit unit = Unit.valueOf(input.get(U_KEY+id_str));
+				   Unit unit = Unit.valueOf(input.get(U_KEY+id));
 				   //注文の作成
-				   order.addDeals(g, amount, unit);
+				   GoodsOrder go = new GoodsOrder(Long.parseLong(id), amount, unit);
+				   result.add(go);
 			   }
 		   }
 	   }
 	   if(!(order_flag)) {
 		   throw new IllegalArgumentException();
 	   }
+	   return result;
    }
    
    /*

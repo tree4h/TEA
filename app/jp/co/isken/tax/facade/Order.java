@@ -3,6 +3,7 @@ package jp.co.isken.tax.facade;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import jp.co.isken.tax.domain.commerce.CommercialAccount;
 import jp.co.isken.tax.domain.commerce.CommercialEntry;
@@ -17,42 +18,92 @@ import jp.co.isken.tax.domain.item.Goods;
 import jp.co.isken.tax.domain.item.Unit;
 import jp.co.isken.tax.domain.party.Party;
 import jp.co.isken.tax.rdb.RDBOperator;
+import jp.co.isken.tax.view.GoodsOrder;
 
 public class Order {
-
+	//取引先
 	private Party client;
+	//基本契約
 	private Contract contract;
+	//課税単位
 	private TaxUnitRule taxUnitRule;
 	
 	//商流取引
-	private CommercialTransaction comTransaction;
-	private List<CommercialEntry> comEntry = new ArrayList<CommercialEntry>();
-	private List<CommercialAccount> comAccount = new ArrayList<CommercialAccount>();
+	private CommercialTransaction ct;
+	//商流勘定(いらない？ここで作成することもあるからいる)
+	private List<CommercialAccount> cas = new ArrayList<CommercialAccount>();
+	//新規作成対象CE
+	private List<CommercialEntry> newCE = new ArrayList<CommercialEntry>();
+	//修正対象CE
+	private List<CommercialEntry> oldCE = new ArrayList<CommercialEntry>();
+	//修正CE（赤）
+	private List<CommercialEntry> redCE = new ArrayList<CommercialEntry>();
 	
-	public Order(Party client, DealType dealType, boolean taxedDeal, TaxedDealType taxedDealType, 
+	/*
+	 * 新規注文
+	 */
+	public Order(long party_id, DealType dealType, boolean taxedDeal, TaxedDealType taxedDealType, 
 			Date dealDate, ComputeType computeType) {
+		Party client = RDBOperator.$findParty(party_id);
+		
 		this.client = client;
 		this.contract = RDBOperator.$findContract(client, dealType.getContractType(), dealDate);
 		this.taxUnitRule = contract.getTaxCondition().getTaxUnitRule();
 		//商流取引の作成
-		this.comTransaction = CommercialTransaction.create(dealType, taxedDeal, taxedDealType, 
+		this.ct = CommercialTransaction.create(dealType, taxedDeal, taxedDealType, 
 				dealDate, contract, computeType);
 	}
-
-	public void addDeals(Goods goods, double amount, Unit unit) {
-		//課税単位が合計の際のCTへの品目設定
-		if(taxUnitRule == TaxUnitRule.SUM || taxUnitRule == TaxUnitRule.CHEAPER) {
-			comTransaction.setItem(goods.getItem());
+	/*
+	 * 修正注文
+	 */
+	public Order(long ct_id) {
+		//商流取引の取得
+		this.ct = RDBOperator.$findCT(ct_id);
+		this.contract = ct.getContract();
+		this.client = contract.getFirstParty();
+		this.taxUnitRule = contract.getTaxCondition().getTaxUnitRule();
+	}
+	
+	/*
+	 * 新規OrderかどうかはControllerで振り分ける
+	 */
+	public void createCE(List<GoodsOrder> gos) {
+		for(GoodsOrder go : gos) {
+			Goods goods = RDBOperator.$findGoods(go.id);
+			//課税単位が合計の際のCTへの品目設定
+			if(taxUnitRule == TaxUnitRule.SUM || taxUnitRule == TaxUnitRule.CHEAPER) {
+				ct.setItem(goods.getItem());
+			}
+			//商流勘定の検索
+			CommercialAccount ca = RDBOperator.$findCA(client, goods);
+			//商流移動の作成
+			CommercialEntry ce = CommercialEntry.create(go.amount, go.unit, ct, ca);
+			if(!(cas.contains(ca))) {
+				cas.add(ca);
+			}
+			newCE.add(ce);
 		}
-		//商流勘定の検索
-		CommercialAccount ca = RDBOperator.$findCA(client, goods);
-		//商流移動の作成
-		CommercialEntry ce = CommercialEntry.create(amount, unit, comTransaction, ca);
-		
-		if(!(comAccount.contains(ca))) {
-			comAccount.add(ca);
+	}
+	/*
+	 * 修正オーダー
+	 */
+	public void reviceCE(List<GoodsOrder> gos) {
+		for(Map.Entry<CommercialEntry, Double> ce : oldCEs.entrySet()) {
+			CommercialEntry oldCE = ce.getKey();
+			double newAmount = ce.getValue();
+			newCEs.add(oldCE.cancel(newAmount));
 		}
-		comEntry.add(ce);
+		for(GoodsOrder go : gos) {
+			Goods goods = RDBOperator.$findGoods(go.id);
+			//商流勘定の検索
+			CommercialAccount ca = RDBOperator.$findCA(client, goods);
+			//商流移動の作成
+			CommercialEntry ce = CommercialEntry.create(go.amount, go.unit, ct, ca);
+			if(!(cas.contains(ca))) {
+				cas.add(ca);
+			}
+			newCE.add(ce);
+		}
 	}
 	
 	/*
@@ -61,11 +112,11 @@ public class Order {
 	 * CEの前に、CT,CAの永続化が必要
 	 */
 	public void commit() {
-		comTransaction.save();
-		for(CommercialAccount ca : comAccount) {
+		ct.save();
+		for(CommercialAccount ca : cas) {
 			ca.save();
 		}
-		for(CommercialEntry ce : comEntry) {
+		for(CommercialEntry ce : newCE) {
 			ce.save();
 		}
 	}
@@ -79,15 +130,15 @@ public class Order {
 	}
 
 	public CommercialTransaction getCommercialTransaction() {
-		return this.comTransaction;
+		return this.ct;
 	}
 
 	public List<CommercialEntry> getCommercialEtnries() {
-		return this.comEntry;
+		return this.newCE;
 	}
 
 	public List<CommercialAccount> getCommercialAccounties() {
-		return this.comAccount;
+		return this.cas;
 	}
 
 	public RoundingRule getTaxRoundingRule() {

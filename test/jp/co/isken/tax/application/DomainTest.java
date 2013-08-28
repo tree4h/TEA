@@ -100,9 +100,9 @@ public class DomainTest extends BaseModelTest {
 		client01.save();
 		contract01.save();
 		//注文
-		Order o = new Order(client01, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client01.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -128,9 +128,9 @@ public class DomainTest extends BaseModelTest {
 		client02.save();
 		contract02.save();
 		// 注文
-		Order o = new Order(client02, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client02.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -155,9 +155,9 @@ public class DomainTest extends BaseModelTest {
 		client03.save();
 		contract03.save();
 		// 注文
-		Order o = new Order(client03, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client03.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -183,9 +183,9 @@ public class DomainTest extends BaseModelTest {
 		client04.save();
 		contract04.save();
 		// 注文
-		Order o = new Order(client04, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client04.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -210,9 +210,9 @@ public class DomainTest extends BaseModelTest {
 		client05.save();
 		contract05.save();
 		// 注文
-		Order o = new Order(client05, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client05.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -237,9 +237,9 @@ public class DomainTest extends BaseModelTest {
 		client06.save();
 		contract06.save();
 		// 注文
-		Order o = new Order(client06, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client06.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -264,9 +264,9 @@ public class DomainTest extends BaseModelTest {
 		client07.save();
 		contract07.save();
 		// 注文
-		Order o = new Order(client07, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client07.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -291,9 +291,9 @@ public class DomainTest extends BaseModelTest {
 		client08.save();
 		contract08.save();
 		// 注文
-		Order o = new Order(client08, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client08.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -319,9 +319,9 @@ public class DomainTest extends BaseModelTest {
 		client09.save();
 		contract09.save();
 		// 注文
-		Order o = new Order(client09, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client09.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.外税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -347,9 +347,9 @@ public class DomainTest extends BaseModelTest {
 		client10.save();
 		contract10.save();
 		// 注文
-		Order o = new Order(client10, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.内税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client10.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.内税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
@@ -375,9 +375,9 @@ public class DomainTest extends BaseModelTest {
 		client11.save();
 		contract11.save();
 		// 注文
-		Order o = new Order(client11, DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.非課税);
-		o.addDeals(goods1, 5.5, Unit.KG);
-		o.addDeals(goods2, 8.3, Unit.KG);
+		Order o = new Order(client11.getId(), DealType.販売取引, true, TaxedDealType.社外取引, date("2013/07/30"), ComputeType.非課税);
+		o.createCEs(goods1, 5.5, Unit.KG);
+		o.createCEs(goods2, 8.3, Unit.KG);
 		//　代金計算
 		Payment p = new Payment(o);
 		p.addPayment();
