@@ -1,13 +1,18 @@
-@(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
+@(message: String)(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
 @title = {注文}
 
 @main(title, "4") {
 	<div class="container">
 	<div class="span9">
 	</br>
+	@if(message != ""){
+		<div class="alert alert-error">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			@message
+		</div>
+	}
 	<h2>注文   @ov.id</h2>
-	<form action="/order/revise" method="POST" class="form-horizontal" id="valcheck" >
-		<input type="hidden" name="order_id" value="@ov.id">
+	<form action="/order/@ov.id/revise" method="POST" class="form-horizontal" id="valcheck" >
 		<div class="control-group">
 		<label class="control-label">取引先</label>
 		<div class="controls">
@@ -70,6 +75,7 @@
 				<input type="text" class="span2" value="@ov.price 円" name="item" disabled>
 		</div>
 		</div>
+		
 		<div class="control-group">
 		<label class="control-label">内消費税</label>
 		<div class="controls">
@@ -77,20 +83,21 @@
 		</div>
 		</div>
 
+		<div class="control-group">
 		<div class="controls">
 	    <div class="actions">
 	    	<button class="btn btn-primary" type="submit">修正</button>
 	        <a href="/order" class="btn">Back</a>
 	    </div>
 		</div>
-	</form>
+		</div>
 
-	<form action="/order/delete" method="POST" class="form-horizontal" id="valcheck" >
-		<input type="hidden" name="order_id" value="@ov.id">
+		<div class="control-group">
 		<div class="controls">
 	    <div class="actions">
-	    	<button class="btn" type="submit">削除</button>
 	        <a href="/order/@ov.id/TEA" class="btn  btn-success" target="_blank">TEA</a>
+	        <a href="/order/@ov.id/delete" class="btn  btn-danger" target="_blank">削除</a>
+		</div>
 	    </div>
 		</div>
 	</form>

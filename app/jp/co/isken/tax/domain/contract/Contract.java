@@ -28,7 +28,6 @@ public class Contract extends Model {
 	private Party firstParty;				//契約先
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="range_id")
-//	@OnDelete(action=OnDeleteAction.CASCADE)
 	private DateRange range;				//契約期間（発効日-失効日）
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="taxCondition_id")
@@ -79,6 +78,9 @@ public class Contract extends Model {
 	
 	public RoundingRule getRoundingRule() {
 		return taxCondition.getRoundingRule();
+	}
+	public TaxUnitRule getTaxUnitRule() {
+		return taxCondition.getTaxUnitRule();
 	}
 
 	public DateRange getRange() {

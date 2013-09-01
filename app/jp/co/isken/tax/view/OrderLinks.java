@@ -85,7 +85,7 @@ public class OrderLinks {
 				receipt.put(gname, gprice);
 				double gamount = bce.getAmount();
 				String gunit = bce.getUnit().name();
-				receipt2.add(new Receipt(bce.getId(), gname, gamount, gunit, gprice));
+				receipt2.add(new Receipt(bce.getId(), g.getId(), gname, gamount, gunit, gprice));
 				//商品代金の合計
 				price += gprice;
 			}

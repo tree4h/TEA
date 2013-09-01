@@ -213,9 +213,17 @@ public class RDBOperator {
 				return pe;
 			}
 		}
-		//TODO 例外処理
-		System.out.println("The PE does not exist!!");
 		return null;
+	}
+	/*
+	 * 指定のCEを参照するPEを返す
+	 */
+	public static PaymentEntry $findPE(CommercialEntry ce, PaymentAccount pa) {
+		PaymentTransaction pt = $findPT(ce);
+		if(pt == null) {
+			return null;
+		}
+		return $findPE(pt, pa);
 	}
 	
 	/*

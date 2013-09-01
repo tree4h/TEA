@@ -36,9 +36,8 @@ public class PlantUML {
 	private static final String L = " -l-> ";
 	
 	//出力先
-	private static final String WORK_DIR = "C:\\play-2.1.1\\TEA\\public\\plantuml\\";
-	//TODO @asset利用したい
 	//private static final String WORK_DIR = "C:\\play-2.1.1\\TEA\\public\\plantuml\\";
+	private static final String WORK_DIR = ".\\public\\plantuml\\";
 
 	public PlantUML(OrderLinks ol) {
 		this.ol = ol;
@@ -68,7 +67,8 @@ public class PlantUML {
 	private void execPlantUML() {
 		Runtime r = Runtime.getRuntime();
 		try {
-			String cmd = "java -jar "+WORK_DIR+"plantuml.jar -charset UTF-8 -o "+WORK_DIR+" "+puml_name;
+			//String cmd = "java -jar "+WORK_DIR+"plantuml.jar -charset UTF-8 -o "+WORK_DIR+" "+puml_name;
+			String cmd = "java -jar "+WORK_DIR+"plantuml.jar -charset UTF-8 "+puml_name;
 			r.exec(cmd);
 			//外部実行コマンドの終了を待つ（puml.pngファイル作成中にアクセスしてエラーとなるため）
 			Process p = Runtime.getRuntime().exec(cmd);

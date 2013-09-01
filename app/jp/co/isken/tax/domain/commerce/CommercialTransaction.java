@@ -120,23 +120,22 @@ public class CommercialTransaction extends Model {
 	}
 	/*
 	 * 商流移動キャンセル処理[課税単位＝合計]
-	 * 1.関連PE,PTの削除を行う
-	 * 2.新CTを根拠とするPT,PE（消費税）の作成
+	 * 関連PE,PTの削除を行う
 	 */
-	public void cancel() {
+	public void revicePT() {
 		//関連PT,PEの削除
 		PaymentTransaction pt = RDBOperator.$findPT(this);
-		pt.deleteByCancel();
+		if(pt != null) {
+			pt.revice();
+		}
 	}
+	/*
+	 * CTを根拠とするPT,PE（消費税）の作成
+	 */
 	public PaymentTransaction createPT() {
-		PaymentTransaction newPT = new PaymentTransaction(whenCharged, this);
-		newPT.save();
-		return newPT;
+		return new PaymentTransaction(whenCharged, this);
 	}
-	public void createPETax(PaymentTransaction newPT) {
-		double price = this.sumUpPrice();
-		newPT.createPETax(contract.getFirstParty(), item, this.getRoundingRule(), price, whenCharged, computeType);
-	}
+
 	/*
 	 * 自身の取引の合計代金を算出して返す
 	 */

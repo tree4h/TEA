@@ -83,12 +83,9 @@ public class PaymentTransaction extends Model {
 	 * 根拠となるCE/CTがキャンセルされた時の処理
 	 * 自身を参照しているPEを削除後、自身を削除する
 	 */
-	public void deleteByCancel() {
+	public void revice() {
 		List<PaymentEntry> pes = RDBOperator.$findPEs(this);
-		System.out.println("PT.deleteByCancel()"+pes);
-		
 		for(PaymentEntry pe : pes) {
-			System.out.println("PE"+pe);
 			pe.delete();
 		}
 		this.delete();
@@ -97,25 +94,22 @@ public class PaymentTransaction extends Model {
 	/*
 	 * PE（商品代金）の作成
 	 */
-	public void createPEPrice(Party client, double price) {
-		//5.PE（商品代金）の作成
+	public PaymentEntry createPE(Party client, double price) {
 		//PA(商品代金)の取得
 		PaymentAccount pa = RDBOperator.$findPA(client, PaymentAccountType.商品代金);
 		//新しいPEの作成
-		PaymentEntry pe = PaymentEntry.create(price, this, pa);
-		pe.save();
+		return PaymentEntry.create(price, this, pa);
 	}
 	/*
 	 * PE（消費税）の作成
 	 */
-	public void createPETax(Party client, Item item, RoundingRule roundingRule, double price, Date dealDate, ComputeType computeType) {
+	public PaymentEntry createPE(Party client, Item item, RoundingRule roundingRule, double price, Date dealDate, ComputeType computeType) {
 		//消費税の計算
 		ComputeTaxFacade taxCal = new ComputeTaxFacade(item, roundingRule, price, dealDate, computeType);
 		double tax = taxCal.calcConsumptionTax();
 		//PA(消費税)の取得
 		PaymentAccount pa = RDBOperator.$findPA(client, PaymentAccountType.消費税);
 		//新しいPEの作成
-		PaymentEntry pe = PaymentEntry.create(tax, this, pa);
-		pe.save();
+		return PaymentEntry.create(tax, this, pa);
 	}
 }

@@ -8,6 +8,10 @@ GET     /                           controllers.PartyController.showPartyList()
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
+#ManageController
+GET	/manage		controllers.ManageController.showManageMenu()
+POST	/manage/alldelete		controllers.ManageController.deleteData()
+
 #PartyController
 GET	/party		controllers.PartyController.showPartyList()
 GET	/party/entry			controllers.PartyController.initParty()
@@ -32,12 +36,12 @@ POST	/item/delete			controllers.ItemController.deleteItem()
 #OrderController
 GET		/order		controllers.OrderController.showOrderList()
 GET		/order/entry		controllers.OrderController.initOrder()
-GET	/order/confirm/:id			controllers.OrderController.confirmOrder(id :Long)
 POST	/order/entry			controllers.OrderController.entryOrder()
+POST	/order/save			controllers.OrderController.saveOrder()
 GET	/order/:id			controllers.OrderController.showOrder(id :Long)
+GET	/order/:id/delete			controllers.OrderController.deleteOrder(id :Long)
 GET	/order/:id/TEA			controllers.OrderController.showOrderTEA(id :Long)
-POST	/order/delete			controllers.OrderController.deleteOrder()
-POST	/order/revise			controllers.OrderController.reviseOrder()
+POST	/order/:id/revise			controllers.OrderController.reviseOrder(id :Long)
 
 #TaxController
 GET		/tax		controllers.TaxController.showTaxList()

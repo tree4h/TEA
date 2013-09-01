@@ -19,6 +19,7 @@ import jp.co.isken.tax.domain.item.Item;
 import jp.co.isken.tax.domain.item.Unit;
 import jp.co.isken.tax.domain.item.UnitPrice;
 import jp.co.isken.tax.domain.party.Party;
+import jp.co.isken.tax.domain.payment.PaymentEntry;
 import jp.co.isken.tax.domain.payment.PaymentTransaction;
 import jp.co.isken.tax.domain.commerce.ComputeType;
 import jp.co.isken.tax.rdb.RDBOperator;
@@ -112,48 +113,56 @@ public class CommercialEntry extends Model {
 		return id;
 	}
 	/*
-	 * 商流移動キャンセル処理
-	 * 1.赤CEを作成(自身は削除しない)
-	 * 2.関連PE,PTの削除を行う
-	 * 3.新CEを作成
+	 * 商流移動修正処理
+	 * 赤CEを作成(自身は削除しない)
 	 * TODO 赤、黒の関連の必要性
 	 */
-	public CommercialEntry cancel(double newAmount) {
-		//1.赤CEの作成
+	public CommercialEntry createRedCE() {
 		CommercialEntry redCE = CommercialEntry.create(-amount, unit, transaction, account);
-		redCE.save();
-		//2.関連PE,PTの削除
-		PaymentTransaction pt = RDBOperator.$findPT(this);
-		pt.deleteByCancel();
-		//3.新CEを作成
+		return redCE;
+	}
+	/*
+	 * 商流移動修正処理
+	 * 新CEを作成
+	 */
+	public CommercialEntry createNewCE(double newAmount) {
 		CommercialEntry newCE = CommercialEntry.create(newAmount, unit, transaction, account);
-		newCE.save();
 		return newCE;
 	}
 	/*
-	 * 商流移動キャンセル処理
+	 * 商流移動修正処理
+	 * 関連PT、PEの修正（削除）
+	 */
+	public void revicePayment() {
+		PaymentTransaction pt = RDBOperator.$findPT(this);
+		if(pt != null) {
+			pt.revice();
+		}
+	}
+	
+	/*
+	 * 商流移動修正処理
 	 * 4.新CEを根拠とするPTの作成
 	 * TODO 赤、黒の関連の必要性
 	 */
 	public PaymentTransaction createPT() {
 		//4.新CEを根拠とするPTの作成
 		PaymentTransaction newPT = new PaymentTransaction(transaction.getWhenCharged(), this);
-		newPT.save();
 		return newPT;
 	}
-	public void createPEPrice(PaymentTransaction pt) {
+	public PaymentEntry createGoodsPE(PaymentTransaction pt) {
 		Party client = transaction.getContract().getFirstParty();
 		double price = this.calcPayment();
-		pt.createPEPrice(client, price);
+		return pt.createPE(client, price);
 	}
-	public void createPETax(PaymentTransaction pt) {
+	public PaymentEntry createTaxPE(PaymentTransaction pt) {
 		ComputeType computeType = transaction.getComputeType();
 		Party client = transaction.getContract().getFirstParty();
 		Item item = account.getGoods().getItem();
 		RoundingRule roundingRule = transaction.getContract().getRoundingRule();
 		Date dealDate = transaction.getWhenCharged();
 		double price = this.calcPayment();
-		pt.createPETax(client, item, roundingRule, price, dealDate, computeType);
+		return pt.createPE(client, item, roundingRule, price, dealDate, computeType);
 	}
 	/*
 	 * 自身の代金を計算する

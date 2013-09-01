@@ -1,4 +1,4 @@
-@(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
+@(cache: String)(ov: jp.co.isken.tax.view.OrderView)(receipts: List[jp.co.isken.tax.view.Receipt])
 @title = {注文確認}
 
 @main(title, "4") {
@@ -6,8 +6,8 @@
 	<div class="span9">
 	</br>
 	<h2>注文確認</h2>
-	<form action="/order/delete" method="POST" class="form-horizontal" id="valcheck" >
-		<input type="hidden" name="order_id" value="@ov.id">
+	<form action="/order/save" method="POST" class="form-horizontal" id="valcheck" >
+		<input type="hidden" name="cache_id" value="@cache">
 		<div class="control-group">
 		<label class="control-label">取引先</label>
 		<div class="controls">
@@ -44,6 +44,13 @@
 		</div>
 
 		<div class="control-group">
+		<label class="control-label">消費税計算</label>
+		<div class="controls">
+			<input type="text" class="span2" value="@ov.computeType" name="compute_type" required disabled>
+		</div>
+		</div>
+
+		<div class="control-group">
 		<label class="control-label">商品</label>
    		@for(r <- receipts) {
 		<div class="controls">
@@ -70,8 +77,8 @@
 
 		<div class="controls">
 	    <div class="actions">
-	        <a href="/order" class="btn btn-primary">OK</a>
-	    	<button class="btn" type="submit">Cancel</button>
+	    	<button class="btn btn-primary" type="submit">OK</button>
+	        <a href="/order" class="btn">Cancel</a>
 	    </div>
 		</div>
 	</form>
