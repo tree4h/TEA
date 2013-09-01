@@ -15,11 +15,7 @@ import play.db.ebean.Model;
 
 import jp.co.isken.tax.domain.commerce.CommercialEntry;
 import jp.co.isken.tax.domain.commerce.CommercialTransaction;
-import jp.co.isken.tax.domain.contract.RoundingRule;
-import jp.co.isken.tax.domain.item.Item;
 import jp.co.isken.tax.domain.party.Party;
-import jp.co.isken.tax.facade.ComputeTaxFacade;
-import jp.co.isken.tax.domain.commerce.ComputeType;
 import jp.co.isken.tax.rdb.RDBOperator;
 
 @Entity
@@ -89,27 +85,5 @@ public class PaymentTransaction extends Model {
 			pe.delete();
 		}
 		this.delete();
-	}
-
-	/*
-	 * PE（商品代金）の作成
-	 */
-	public PaymentEntry createPE(Party client, double price) {
-		//PA(商品代金)の取得
-		PaymentAccount pa = RDBOperator.$findPA(client, PaymentAccountType.商品代金);
-		//新しいPEの作成
-		return PaymentEntry.create(price, this, pa);
-	}
-	/*
-	 * PE（消費税）の作成
-	 */
-	public PaymentEntry createPE(Party client, Item item, RoundingRule roundingRule, double price, Date dealDate, ComputeType computeType) {
-		//消費税の計算
-		ComputeTaxFacade taxCal = new ComputeTaxFacade(item, roundingRule, price, dealDate, computeType);
-		double tax = taxCal.calcConsumptionTax();
-		//PA(消費税)の取得
-		PaymentAccount pa = RDBOperator.$findPA(client, PaymentAccountType.消費税);
-		//新しいPEの作成
-		return PaymentEntry.create(tax, this, pa);
 	}
 }

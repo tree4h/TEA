@@ -14,49 +14,49 @@ import jp.co.isken.tax.domain.commerce.ComputeType;
 
 public class ComputeTaxFacade {
 	
-	private TaxItem item;
 	private ComputeRounding round;
-	private double price;
 	private Date date;
-	//消費税計算
+	private ComputeType computeType;
 	private ComputeConsumptionTax cal;
 	
-	public ComputeTaxFacade(Item item, RoundingRule round, double price, Date date, ComputeType computeType) {
-		//品目変換
-		this.item = item.getTaxItem();
+	public ComputeTaxFacade(RoundingRule round, Date date, ComputeType computeType) {
 		//まるめ計算変換
 		this.round = round.getComputeRounding();
-		this.price = price;
 		this.date = date;
-		this.setCalculator(computeType);
+		this.computeType = computeType;
 	}
 	
-	private void setCalculator(ComputeType computeType) {
+	public double calcConsumptionTax(Item item, double price) {
+		//税品目変換
+		setCalculator(item.getTaxItem());
+		return cal.calcTax(price);
+	}
+	
+	/*
+	 * 消費税計算機の設定
+	 */
+	private void setCalculator(TaxItem item) {
 		if(item == null) {
 			if(computeType.equals(ComputeType.外税)) {
-				this.cal = new ComputeExclusive(price, round, date);
+				this.cal = new ComputeExclusive(round, date);
 			}
 			else if(computeType.equals(ComputeType.内税)) {
-				this.cal = new ComputeInclusive(price, round, date);
+				this.cal = new ComputeInclusive(round, date);
 			}
 			else if(computeType.equals(ComputeType.非課税)) {
-				this.cal = new ComputeFree(price, round, date);
+				this.cal = new ComputeFree(round, date);
 			}
 		}
 		else {
 			if(computeType.equals(ComputeType.外税)) {
-				this.cal = new ComputeExclusive(price, round, date, item);
+				this.cal = new ComputeExclusive(round, date, item);
 			}
 			else if(computeType.equals(ComputeType.内税)) {
-				this.cal = new ComputeInclusive(price, round, date, item);
+				this.cal = new ComputeInclusive(round, date, item);
 			}
 			else if(computeType.equals(ComputeType.非課税)) {
-				this.cal = new ComputeFree(price, round, date, item);
+				this.cal = new ComputeFree(round, date, item);
 			}
 		}
-	}
-	
-	public double calcConsumptionTax() {
-		return this.cal.calcTax();
 	}
 }

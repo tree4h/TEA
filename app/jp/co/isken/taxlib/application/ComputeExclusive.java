@@ -7,20 +7,18 @@ import jp.co.isken.taxlib.domain.TaxItem;
 
 public class ComputeExclusive extends ComputeConsumptionTax {
 	
-	public ComputeExclusive(double price, ComputeRounding round, Date date) {
-		super(price, round, date);
-		// TODO Auto-generated constructor stub
+	public ComputeExclusive(ComputeRounding round, Date date) {
+		super(round, date);
 	}
 
-	public ComputeExclusive(double price, ComputeRounding round, Date date, TaxItem item) {
-		super(price, round, date, item);
-		// TODO Auto-generated constructor stub
+	public ComputeExclusive(ComputeRounding round, Date date, TaxItem item) {
+		super(round, date, item);
 	}
 
 	@Override
-	public double calcTax() {
-		BigDecimal bdprice = new BigDecimal(this.price);
-		BigDecimal bdrate = new BigDecimal(this.rate);
+	public double calcTax(double price) {
+		BigDecimal bdprice = new BigDecimal(price);
+		BigDecimal bdrate = new BigDecimal(rate);
 		return round.calc(bdprice.multiply(bdrate).doubleValue());
 	}
 

@@ -66,6 +66,10 @@ public class Order {
 	private double tax = 0.0;
 	//商品代金合計
 	private double sumPrice = 0.0;
+	
+	//消費税計算ファサード
+	private ComputeTaxFacade taxCal;
+
 	/*
 	 * 新規オーダー
 	 */
@@ -81,6 +85,7 @@ public class Order {
 		//商流取引の作成
 		this.ct = CommercialTransaction.create(dealType, taxedDeal, taxedDealType, 
 				dealDate, contract, computeType);
+		this.taxCal = new ComputeTaxFacade(taxRoudingRule, dealDate, computeType);
 	}
 	/*
 	 * 修正オーダー
@@ -206,9 +211,11 @@ public class Order {
 	 */
 	private void createPaymentByDETAIL() {
 		for(CommercialEntry ce : newCEs) {
-			PaymentTransaction pt = ce.createPT();
-			PaymentEntry pe1 = ce.createGoodsPE(pt);
-			PaymentEntry pe2 = ce.createTaxPE(pt);
+			PaymentTransaction pt = new PaymentTransaction(dealDate, ce);
+			double price = ce.calcPayment();
+			PaymentEntry pe1 = PaymentEntry.create(price, pt, goodsPA);
+			double tax_detail = this.taxCal.calcConsumptionTax(ce.getItem(), price);
+			PaymentEntry pe2 = PaymentEntry.create(tax_detail, pt, taxPA);
 			pts.add(pt);
 			pes.add(pe1);
 			pes.add(pe2);
@@ -224,8 +231,9 @@ public class Order {
 	 */
 	private void createPaymentBySUM() {
 		for(CommercialEntry ce : newCEs) {
-			PaymentTransaction pt = ce.createPT();
-			PaymentEntry pe1 = ce.createGoodsPE(pt);
+			PaymentTransaction pt = new PaymentTransaction(dealDate, ce);
+			double price = ce.calcPayment();
+			PaymentEntry pe1 = PaymentEntry.create(price, pt, goodsPA);
 			pts.add(pt);
 			pes.add(pe1);
 			//レシート作成
@@ -234,7 +242,7 @@ public class Order {
 					ce.getUnit().name(), pe1.getPrice()));
 		}
 		//消費税移動の作成
-		PaymentTransaction pt = ct.createPT();
+		PaymentTransaction pt = new PaymentTransaction(dealDate, ct);
 		PaymentEntry pe = PaymentEntry.create(tax, pt, taxPA);
 		pts.add(pt);
 		pes.add(pe);
@@ -273,8 +281,7 @@ public class Order {
 		}
 		//消費税計算
 		Item item = ct.getItem();
-		ComputeTaxFacade taxCal = new ComputeTaxFacade(item, taxRoudingRule, sumPrice, dealDate, computeType);
-		return taxCal.calcConsumptionTax();
+		return taxCal.calcConsumptionTax(item, sumPrice);
 	}
 	/*
 	 * [課税単位＝明細]
@@ -290,8 +297,7 @@ public class Order {
 			//代金計算
 			double price = ce.calcPayment();
 			//消費税計算
-			ComputeTaxFacade taxCal = new ComputeTaxFacade(item, taxRoudingRule, price, dealDate, computeType);
-			tax_detail += taxCal.calcConsumptionTax();
+			tax_detail += taxCal.calcConsumptionTax(item, price);
 			//商品合計代金の計算
 			sumPrice += price;
 		}

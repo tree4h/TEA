@@ -36,7 +36,9 @@ public class OrderController extends Controller {
 	private static ViewMessage message = ViewMessage.NO_MESSAGE;
 
 	/*
-     * 注文一覧画面表示
+     * [注文]リンク
+     * →[注文一覧]画面生成
+     * →[注文一覧]
      */
     public static Result showOrderList() {
 		//商流取引の取得
@@ -49,7 +51,9 @@ public class OrderController extends Controller {
 		return ok(orderlist.render(orders));
     }
     /*
-     * 注文登録画面表示
+     * [注文一覧]+
+     * →注文登録画面生成
+     * →[注文登録]
      */
     public static Result initOrder() {
     	List<Party> parties = RDBOperator.$findParty();
@@ -64,7 +68,25 @@ public class OrderController extends Controller {
     	return ok(orderentry.render(msg, parties, goods, types, taxtypes, units));
 	}
     /*
-     * 注文確認画面表示
+     * [注文一覧]注文番号
+     * →注文修正画面生成
+     * →[注文修正]
+     */
+    public static Result showOrder(long id) {
+ 	   CommercialTransaction ct = RDBOperator.$findCT(id);
+ 	   OrderView ov = new OrderView(ct);
+ 	   List<Receipt> receipt = ov.link.getReceipt2();
+ 	   
+ 	   //画面表示用メッセージの設定
+ 	   String msg = message.getMessage();
+ 	   //メッセージの初期化
+ 	   message = ViewMessage.NO_MESSAGE;
+ 	   return ok(order.render(msg, ov, receipt));
+    }
+    /*
+     * [注文確認]OK
+     * →注文確定（永続化）処理
+     * →[注文一覧]
      */
    public static Result saveOrder() {
 		DynamicForm input = Form.form().bindFromRequest();
@@ -80,22 +102,9 @@ public class OrderController extends Controller {
 		return redirect(controllers.routes.OrderController.showOrderList());
 	}
    /*
-    * 注文画面表示
-    * 注文確認画面と同じ処理（VIEWが異なるだけ）
-    */
-   public static Result showOrder(long id) {
-	   CommercialTransaction ct = RDBOperator.$findCT(id);
-	   OrderView ov = new OrderView(ct);
-	   List<Receipt> receipt = ov.link.getReceipt2();
-	   
-	   //画面表示用メッセージの設定
-	   String msg = message.getMessage();
-	   //メッセージの初期化
-	   message = ViewMessage.NO_MESSAGE;
-	   return ok(order.render(msg, ov, receipt));
-   }
-   /*
-    * 注文TEA画像表示
+     * [注文修正]TEA
+     * →注文TEA画像作成処理
+     * →[注文TEA]
     */
    public static Result showOrderTEA(long id) {
 	   CommercialTransaction ct = RDBOperator.$findCT(id);
@@ -106,7 +115,9 @@ public class OrderController extends Controller {
 	   return redirect(routes.Assets.at("plantuml/"+puml.png_name));
    }
    /*
-    * 注文削除処理
+     * [注文修正]削除
+     * →注文削除処理
+     * →[注文一覧]
     */
    public static Result deleteOrder(long id) {
 	   CommercialTransaction ct = RDBOperator.$findCT(id);
@@ -117,7 +128,9 @@ public class OrderController extends Controller {
 	   return redirect(controllers.routes.OrderController.showOrderList());
    }
     /*
-     * 注文登録
+     * [注文登録]Entry
+     * →新規注文生成、注文確認画面生成
+     * →[注文確認]
      */
    public static Result entryOrder() {
 	   	try {
@@ -166,7 +179,9 @@ public class OrderController extends Controller {
 		}
 	}
    /*
-    * 注文修正処理
+    * [注文確認]修正
+    * →修正注文生成、注文確認画面生成
+    * →[注文確認]
     */
    public static Result reviseOrder(long id) {
 	   try {
@@ -198,7 +213,7 @@ public class OrderController extends Controller {
    }
    
    /*
-    * [新規オーダー]
+    * [新規注文]
     * 商流移動（CE）の作成
     */
    private static void createCEs(Map<String, String> input, Order order) {
@@ -228,7 +243,7 @@ public class OrderController extends Controller {
    }
    
    /*
-    * [修正オーダー]
+    * [修正注文]
     * 商流移動（CE）の作成
     */
    private static void reviceCEs(Map<String, String> input, Order order) {

@@ -1,7 +1,6 @@
 package jp.co.isken.tax.domain.commerce;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -19,9 +18,7 @@ import jp.co.isken.tax.domain.item.Item;
 import jp.co.isken.tax.domain.item.Unit;
 import jp.co.isken.tax.domain.item.UnitPrice;
 import jp.co.isken.tax.domain.party.Party;
-import jp.co.isken.tax.domain.payment.PaymentEntry;
 import jp.co.isken.tax.domain.payment.PaymentTransaction;
-import jp.co.isken.tax.domain.commerce.ComputeType;
 import jp.co.isken.tax.rdb.RDBOperator;
 
 @Entity
@@ -141,30 +138,6 @@ public class CommercialEntry extends Model {
 	}
 	
 	/*
-	 * 商流移動修正処理
-	 * 4.新CEを根拠とするPTの作成
-	 * TODO 赤、黒の関連の必要性
-	 */
-	public PaymentTransaction createPT() {
-		//4.新CEを根拠とするPTの作成
-		PaymentTransaction newPT = new PaymentTransaction(transaction.getWhenCharged(), this);
-		return newPT;
-	}
-	public PaymentEntry createGoodsPE(PaymentTransaction pt) {
-		Party client = transaction.getContract().getFirstParty();
-		double price = this.calcPayment();
-		return pt.createPE(client, price);
-	}
-	public PaymentEntry createTaxPE(PaymentTransaction pt) {
-		ComputeType computeType = transaction.getComputeType();
-		Party client = transaction.getContract().getFirstParty();
-		Item item = account.getGoods().getItem();
-		RoundingRule roundingRule = transaction.getContract().getRoundingRule();
-		Date dealDate = transaction.getWhenCharged();
-		double price = this.calcPayment();
-		return pt.createPE(client, item, roundingRule, price, dealDate, computeType);
-	}
-	/*
 	 * 自身の代金を計算する
 	 */
 	public double calcPayment() {
@@ -185,5 +158,9 @@ public class CommercialEntry extends Model {
 		double price = amount.multiply(unitPrice).doubleValue();
 		RoundingRule rule = this.transaction.getContract().getPayCondition().getRoundingRule();
 		return rule.calc(price);
+	}
+
+	public Item getItem() {
+		return account.getGoods().getItem();
 	}
 }
